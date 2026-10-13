@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Page</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink:#FF3B7C;
+    --yellow:#FFD400;
+    --blue:#2D5BFF;
+    --purple:#1A0B2E;
+    --white:#FFFFFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    background:var(--purple);
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(255,59,124,0.3), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(45,91,255,0.3), transparent 40%);
+    font-family:'Inter', sans-serif;
+    color:var(--white);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  .screen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    text-align:center;
+  }
+
+  /* SCREEN 1: welcome */
+  #welcomeScreen{
+    cursor:pointer;
+    flex-direction:column;
+    gap:22px;
+  }
+  #welcomeScreen h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(2rem, 8vw, 3.6rem);
+    letter-spacing:-1px;
+  }
+  #welcomeScreen .tap{
+    font-size:0.95rem;
+    color:rgba(255,255,255,0.6);
+    animation:pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:0.4;}
+    50%{opacity:1;}
+  }
+
+  /* SCREEN 2: story */
+  #storyScreen{
+    display:none;
+  }
+  .story-card{
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.15);
+    backdrop-filter:blur(10px);
+    border-radius:20px;
+    padding:36px 28px;
+    max-width:480px;
+    width:100%;
+    text-align:left;
+  }
+  .story-card h2{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:1.7rem;
+    margin-bottom:16px;
+    text-align:center;
+  }
+  .story-card p{
+    color:rgba(255,255,255,0.75);
+    font-size:1rem;
+    line-height:1.6;
+    margin-bottom:14px;
+  }
+  .story-card .continue-btn{
+    width:100%;
+    margin-top:10px;
+    background:var(--yellow);
+    color:var(--purple);
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:1rem;
+    border:none;
+    border-radius:10px;
+    padding:14px;
+    cursor:pointer;
+    transition:transform 0.15s ease, background 0.15s ease;
+  }
+  .story-card .continue-btn:hover{background:var(--pink); color:var(--white);}
+  .story-card .continue-btn:active{transform:scale(0.97);}
+
+  .gallery{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+    margin:20px 0;
+  }
+  .photo-slot{
+    aspect-ratio:1/1;
+    border-radius:10px;
+    overflow:hidden;
+    border:1px dashed rgba(255,255,255,0.3);
+    background:rgba(255,255,255,0.04);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .photo-slot img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .photo-slot .placeholder-label{
+    font-size:0.7rem;
+    color:rgba(255,255,255,0.4);
+    text-align:center;
+    padding:6px;
+    font-family:'Inter', sans-serif;
+  }
+  .photo-caption{
+    text-align:center;
+    font-size:0.8rem;
+    color:rgba(255,255,255,0.6);
+    margin-top:6px;
+    font-family:'Inter', sans-serif;
+  }
+  @media (max-width:420px){
+    .gallery{grid-template-columns:repeat(2, 1fr);}
+  }
+
+  /* SCREEN 3: form */
+  #formScreen{
+    display:none;
+  }
+  .form-card{
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.15);
+    backdrop-filter:blur(10px);
+    border-radius:20px;
+    padding:36px 28px;
+    max-width:420px;
+    width:100%;
+    text-align:left;
+  }
+  .form-card h2{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:1.6rem;
+    margin-bottom:6px;
+    text-align:center;
+  }
+  .form-card p.hint{
+    color:rgba(255,255,255,0.6);
+    font-size:0.9rem;
+    margin-bottom:24px;
+    text-align:center;
+  }
+  .field{margin-bottom:16px;}
+  .field label{
+    display:block;
+    font-size:0.8rem;
+    color:var(--yellow);
+    margin-bottom:6px;
+    font-weight:500;
+  }
+  .field input, .field textarea{
+    width:100%;
+    background:rgba(0,0,0,0.25);
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:10px;
+    padding:12px 14px;
+    color:var(--white);
+    font-family:'Inter', sans-serif;
+    font-size:0.95rem;
+  }
+  .field input:focus, .field textarea:focus{
+    outline:none;
+    border-color:var(--pink);
+  }
+  .field textarea{resize:vertical; min-height:90px;}
+
+  .submit-btn{
+    width:100%;
+    background:var(--yellow);
+    color:var(--purple);
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:1rem;
+    border:none;
+    border-radius:10px;
+    padding:14px;
+    cursor:pointer;
+    transition:transform 0.15s ease, background 0.15s ease;
+  }
+  .submit-btn:hover{background:var(--pink); color:var(--white);}
+  .submit-btn:active{transform:scale(0.97);}
+
+  .thanks{
+    display:none;
+    text-align:center;
+  }
+  .thanks h2{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:1.8rem;
+    margin-bottom:10px;
+  }
+  .thanks p{color:rgba(255,255,255,0.7);}
+
+  .fade-in{
+    animation:fadeIn 0.5s ease forwards;
+  }
+  @keyframes fadeIn{
+    from{opacity:0; transform:translateY(12px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  @media (max-width:480px){
+    .form-card{padding:28px 20px;}
+  }
+</style>
+</head>
+<body>
+
+  <!-- SCREEN 1: Welcome -->
+  <div class="screen" id="welcomeScreen">
+    <h1>Welcome to my page</h1>
+    <div class="tap">TAP ANYWHERE TO CONTINUE</div>
+  </div>
+
+  <!-- SCREEN 2: Story -->
+  <div class="screen" id="storyScreen">
+    <div class="story-card">
+      <h2>A little about this page</h2>
+      <p>[Replace this with your own story — what you've been learning, why you built this, or anything you want them to know before they leave feedback. Blah blah blah — swap this placeholder text out for the real thing.]</p>
+
+      <div class="gallery">
+        <div>
+          <div class="photo-slot">
+            <img src="Snapchat-1425453789.jpg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder-label" style="display:flex; align-items:center; justify-content:center; height:100%;"></div>
+          </div>
+          <div class="photo-caption">Me</div>
+        </div>
+        <div>
+          <div class="photo-slot">
+            <img src="Snapchat-2070846591.jpg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="placeholder-label" style="display:flex; align-items:center; justify-content:center; height:100%;"></div>
+          </div>
+          <div class="photo-caption">Him</div>
+        </div>
+      </div>
+
+      <p>[Add a second paragraph here if you want, or delete this line.]</p>
+      <button class="continue-btn" id="toFormBtn">Continue →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: Form -->
+  <div class="screen" id="formScreen">
+    <div class="form-card" id="formCard">
+      <h2>Tell me who you are</h2>
+      <p class="hint">Fill this in and send it my way</p>
+      <form id="feedbackForm">
+        <div class="field">
+          <label for="name">Your name</label>
+          <input type="text" id="name" placeholder="Your name" required>
+        </div>
+        <div class="field">
+          <label for="extra">Anything else you'd like to add</label>
+          <input type="text" id="extra" placeholder="optional">
+        </div>
+        <div class="field">
+          <label for="message">Your feedback</label>
+          <textarea id="message" placeholder="What do you think?" required></textarea>
+        </div>
+        <div class="field">
+          <label for="email">Send this feedback to (email)</label>
+          <input type="email" id="email" placeholder="destination@email.com" required>
+        </div>
+        <button type="submit" class="submit-btn">Send feedback →</button>
+      </form>
+    </div>
+
+    <div class="form-card thanks" id="thanksCard">
+      <h2>Sent 🎉</h2>
+      <p>Your feedback is on its way. Thank you!</p>
+    </div>
+  </div>
+
+<script>
+  const welcomeScreen = document.getElementById('welcomeScreen');
+  const storyScreen = document.getElementById('storyScreen');
+  const formScreen = document.getElementById('formScreen');
+  const formCard = document.getElementById('formCard');
+  const thanksCard = document.getElementById('thanksCard');
+
+  welcomeScreen.addEventListener('click', () => {
+    welcomeScreen.style.display = 'none';
+    storyScreen.style.display = 'flex';
+    storyScreen.querySelector('.story-card').classList.add('fade-in');
+  });
+
+  document.getElementById('toFormBtn').addEventListener('click', () => {
+    storyScreen.style.display = 'none';
+    formScreen.style.display = 'flex';
+    formCard.classList.add('fade-in');
+  });
+
+  document.getElementById('feedbackForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const extra = document.getElementById('extra').value;
+    const message = document.getElementById('message').value;
+    const destination = document.getElementById('email').value;
+
+    const subject = encodeURIComponent('Feedback from ' + name);
+    const body = encodeURIComponent(
+      'Name: ' + name + '\n' +
+      'Extra: ' + extra + '\n\n' +
+      'Message:\n' + message
+    );
+
+    // Opens the visitor's email app, addressed to whatever email they typed in, prefilled and ready to send
+    window.location.href = 'mailto:' + destination + '?subject=' + subject + '&body=' + body;
+
+    formCard.style.display = 'none';
+    thanksCard.style.display = 'block';
+    thanksCard.classList.add('fade-in');
+  });
+</script>
+
+</body>
+</html>
